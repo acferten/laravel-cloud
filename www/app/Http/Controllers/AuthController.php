@@ -6,21 +6,27 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 
 class AuthController extends Controller
 {
     public function registration(Request $request)
     {
         $fields = $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|string|unique:users,email',
-            'password' => 'required|string|confirmed'
+            'email' => 'required|string|unique:users,email|email:rfc,dns',
+            'password' => ['required', 'confirmed', Password::min(3)
+                ->mixedCase()
+                ->letters()
+                ->numbers(),],
+            'first_name' => 'required|string',
+            'last_name' => 'required|string'
         ]);
 
         $user = User::create([
-            'name' => $fields['name'],
             'email' => $fields['email'],
-            'password' => bcrypt($fields['password'])
+            'password' => bcrypt($fields['password']),
+            'first_name' => $fields['first_name'],
+            'last_name' => $fields['last_name']
         ]);
 
         $token = $user->createToken('myapptoken')->plainTextToken;
@@ -29,7 +35,6 @@ class AuthController extends Controller
             'user' => $user,
             'token' => $token
         ];
-
         return response($response, 201);
     }
 }
