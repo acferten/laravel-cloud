@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RegistrationRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -10,30 +11,20 @@ use Illuminate\Validation\Rules\Password;
 
 class AuthController extends Controller
 {
-    public function registration(Request $request)
+    public function registration(RegistrationRequest $request)
     {
-        $fields = $request->validate([
-            'email' => 'required|string|unique:users,email|email:rfc,dns',
-            'password' => ['required', 'confirmed', Password::min(3)
-                ->mixedCase()
-                ->letters()
-                ->numbers(),],
-            'first_name' => 'required|string',
-            'last_name' => 'required|string'
-        ]);
+        $validated = $request->validated();
 
         $user = User::create([
-            'email' => $fields['email'],
-            'password' => bcrypt($fields['password']),
-            'first_name' => $fields['first_name'],
-            'last_name' => $fields['last_name']
+            'email' => $validated['email'],
+            'password' => bcrypt($validated['password']),
+            'first_name' => $validated['first_name'],
+            'last_name' => $validated['last_name']
         ]);
 
-        $token = $user->createToken('myapptoken')->plainTextToken;
-
         $response = [
-            'user' => $user,
-            'token' => $token
+            'status' => true,
+            'message' => 'Your account has been successfully created'
         ];
         return response($response, 201);
     }
