@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rules\Password;
 
-class RegistrationRequest extends FormRequest
+class LoginRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -18,12 +18,7 @@ class RegistrationRequest extends FormRequest
     {
         return [
             'email' => 'required|string|unique:users,email|email:rfc,dns',
-            'password' => ['required', Password::min(3)
-                ->mixedCase()
-                ->letters()
-                ->numbers(),],
-            'first_name' => 'required|string',
-            'last_name' => 'required|string'
+            'password' => 'required',
         ];
     }
 
@@ -39,6 +34,7 @@ class RegistrationRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'success' => false,
             'message' => $errors
-        ], 400));
+        ], 401));
     }
+
 }

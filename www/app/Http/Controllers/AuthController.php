@@ -28,4 +28,27 @@ class AuthController extends Controller
         ];
         return response($response, 201);
     }
+
+    public function login(Request $request)
+    {
+        // Check email
+        $user = User::where('email', $request['email'])->first();
+
+        // Check password
+        if (!$user || !Hash::check($request['password'], $user->password)) {
+            return response([
+                'message' => 'Authorization error'
+            ], 401);
+        }
+
+        $token = $user->createToken('myapptoken')->plainTextToken;
+
+        $response = [
+            'status' => true,
+            'message' => 'Authorization successful',
+            'token' => $token
+        ];
+
+        return response($response, 201);
+    }
 }
