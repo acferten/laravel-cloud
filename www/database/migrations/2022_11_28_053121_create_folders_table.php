@@ -13,11 +13,12 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('folders', function (Blueprint $table) {
-            $table->uuid('id');
+            $table->uuid('id')->primary();
             $table->string('name');
             $table->foreignUuid('folder_id');
             $table->timestamps();
         });
+
     }
 
     /**
