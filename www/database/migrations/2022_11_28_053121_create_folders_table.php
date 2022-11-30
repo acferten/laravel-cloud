@@ -17,7 +17,12 @@ return new class extends Migration {
         Schema::create('folders', function (Blueprint $table) {
             $table->ulid('id', 10)->primary();
             $table->string('name');
-            $table->foreignUlid('folder_id');
+            $table->ulid('parent_id', 10);
+            $table->foreign('parent_id')->references('id')->on('folders')->onDelete('cascade');
+            $table->foreignIdFor('author_id')->constrained('users');
+
+//            $table->foreign('author_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('coauthor_id')->references('id')->on('users');
             $table->timestamps();
         });
 

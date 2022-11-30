@@ -31,6 +31,21 @@ class Folder extends Model
         return ['id'];
     }
 
+    public function files()
+    {
+        return $this->hasMany(File::class);
+    }
+
+    public function author()
+    {
+        return $this->hasOne(User::class);
+    }
+
+    public function access()
+    {
+        return $this->hasMany(User::class);
+    }
+
     /**
      * The attributes that are mass assignable.
      *
