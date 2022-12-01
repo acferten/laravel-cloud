@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\Uid\Ulid;
 
-class Folder extends Model
+class File extends Model
 {
     use HasFactory, HasUlids;
 
@@ -31,19 +31,9 @@ class Folder extends Model
         return ['id'];
     }
 
-    public function files()
+    public function folder()
     {
-        return $this->hasMany(File::class);
-    }
-
-    public function author()
-    {
-        return $this->hasOne(User::class);
-    }
-
-    public function access()
-    {
-        return $this->hasMany(User::class);
+        return $this->belongsTo(Folder::class);
     }
 
     /**
@@ -52,8 +42,7 @@ class Folder extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'parent_id',
-        'author_id'
+        'folder_id',
+        'name'
     ];
 }

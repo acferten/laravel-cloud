@@ -14,18 +14,21 @@ return new class extends Migration {
 
     public function up()
     {
-        Schema::create('folders', function (Blueprint $table) {
-            $table->ulid('id', 10)->primary();
-            $table->string('name');
-            $table->ulid('parent_id', 10);
+        if (!Schema::hasTable('folders')) {
+            Schema::create('folders', function (Blueprint $table) {
+                $table->ulid('id', 10)->unique()->primary();
+                $table->string('name');
+//            $table->foreignUlid('parent_id')->constrained('folders');
+                $table->ulid('parent_id', 10)->nullable();
+                $table->foreignId('author_id')->constrained('users');
+                $table->foreignId('coauthor_id')->nullable()->constrained('users');
+                $table->timestamps();
+            });
+        }
+
+        Schema::table('folders', function (Blueprint $table) {
             $table->foreign('parent_id')->references('id')->on('folders')->onDelete('cascade');
-            $table->foreignIdFor('author_id')->constrained('users');
-
-//            $table->foreign('author_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('coauthor_id')->references('id')->on('users');
-            $table->timestamps();
         });
-
     }
 
     /**
