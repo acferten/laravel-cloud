@@ -18,7 +18,6 @@ return new class extends Migration {
             Schema::create('folders', function (Blueprint $table) {
                 $table->ulid('id', 10)->unique()->primary();
                 $table->string('name');
-//            $table->foreignUlid('parent_id')->constrained('folders');
                 $table->ulid('parent_id', 10)->nullable();
                 $table->foreignId('author_id')->constrained('users');
                 $table->foreignId('coauthor_id')->nullable()->constrained('users');

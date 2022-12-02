@@ -2,42 +2,39 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\FileRequest;
 use App\Models\File;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class FileController extends Controller
 {
-    public function create(Request $request)
+    public function create(FileRequest $request)
     {
-        $this->validate($request, [
-            'folder_id' => 'required',
-            'files'=>'required',
-        ]);
-
 
         if ($request['folder_id'] == '0') {
             $request['folder_id'] = null;
         }
-        $response = [];
-        if ($request->hasFile('files')) {
-            $files = $request->file('files');
-            foreach ($files as $file) {
-                $newfile = File::create([
-                    'name' => $file->getClientOriginalName(),
-                    'folder_id' => $request['folder_id'],
-                ]);
-                $path = $file->storeAs(
-                    'uploads', $newfile->id
-                );
-                $response = [
-                    'id' => $newfile->id,
-                    'message' => 'Folder created',
-                    'parent_id' => $newfile->folder_id
-                ];
-            }
+
+        foreach ($request->file('files') as $file) {
+            //Создание записи в бд
+            $newfile = File::create([
+                'name' => $file->getClientOriginalName(),
+                'folder_id' => $request['folder_id']
+            ]);
+
+            //Сохранение на сервер
+            $path = $file->storeAs('public/uploads/', $newfile->id . '.' . $file->extension());
+
+            $response = [
+                'success' => true,
+                'message' => 'File created',
+                'name' => $newfile->name,
+                'url' => Storage::url($newfile->id . '.' . $file->extension()),
+                'id' => $newfile->id
+            ];
         }
 
-
-        return response([$response, dd($request->allFiles())], 201);
+        return response($response, 201);
     }
 }

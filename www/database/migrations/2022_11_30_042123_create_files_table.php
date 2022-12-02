@@ -14,7 +14,7 @@ return new class extends Migration {
     {
         Schema::create('files', function (Blueprint $table) {
             $table->ulid('id', 10)->primary();
-            $table->ulid('folder_id', 10);
+            $table->ulid('folder_id', 10)->nullable();
             $table->string('name');
             $table->timestamps();
             $table->foreign('folder_id')->references('id')->on('folders')->onDelete('cascade');

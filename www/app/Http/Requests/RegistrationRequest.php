@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rules\Password;
 
-class RegistrationRequest extends FormRequest
+class RegistrationRequest extends ApiRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -25,20 +25,5 @@ class RegistrationRequest extends FormRequest
             'first_name' => 'required|string',
             'last_name' => 'required|string'
         ];
-    }
-
-    public function failedValidation(Validator $validator)
-    {
-        $errors = '';
-        foreach ($validator->errors()->all() as $error) {
-            $error = substr($error, 0, -1);
-            $errors = $errors . $error . ', ';
-        }
-
-        $errors = substr($errors, 0, -2) . '.';
-        throw new HttpResponseException(response()->json([
-            'success' => false,
-            'message' => $errors
-        ], 400));
     }
 }
