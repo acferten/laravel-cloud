@@ -54,6 +54,7 @@ class Folder extends Model
     protected $fillable = [
         'name',
         'parent_id',
-        'author_id'
+        'author_id',
+        'coauthor_id'
     ];
 }

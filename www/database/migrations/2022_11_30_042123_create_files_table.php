@@ -16,8 +16,11 @@ return new class extends Migration {
             $table->ulid('id', 10)->primary();
             $table->ulid('folder_id', 10)->nullable();
             $table->string('name');
+            $table->foreignId('author_id')
+                ->constrained('users')->onDelete('cascade');;
             $table->timestamps();
-            $table->foreign('folder_id')->references('id')->on('folders')->onDelete('cascade');
+            $table->foreign('folder_id')->references('id')
+                ->on('folders')->onDelete('cascade');
         });
     }
 

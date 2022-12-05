@@ -43,6 +43,7 @@ class File extends Model
      */
     protected $fillable = [
         'folder_id',
+        'author_id',
         'name'
     ];
 }

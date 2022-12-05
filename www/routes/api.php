@@ -16,4 +16,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/folders', [FolderController::class, 'create']);
     Route::post('/folders/{id}/files', [FileController::class, 'create']);
+    Route::delete('/folders/{id}', [FolderController::class, 'delete']);
+    Route::get('/disk', [FolderController::class, 'list']);
+
 });

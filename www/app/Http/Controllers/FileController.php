@@ -20,7 +20,8 @@ class FileController extends Controller
             //Создание записи в бд
             $newfile = File::create([
                 'name' => $file->getClientOriginalName(),
-                'folder_id' => $request['folder_id']
+                'folder_id' => $request['folder_id'],
+                'author_id' => $request->user()->id
             ]);
 
             //Сохранение на сервер
@@ -30,11 +31,10 @@ class FileController extends Controller
                 'success' => true,
                 'message' => 'File created',
                 'name' => $newfile->name,
-                'url' => Storage::url($newfile->id . '.' . $file->extension()),
+                'url' => Storage::url($newfile->id . '.' . $file->extension()), // TODO: Починить ссылки на файлы
                 'id' => $newfile->id
             ];
         }
-
         return response($response, 201);
     }
 }

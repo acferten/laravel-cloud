@@ -19,7 +19,7 @@ return new class extends Migration {
                 $table->ulid('id', 10)->unique()->primary();
                 $table->string('name');
                 $table->ulid('parent_id', 10)->nullable();
-                $table->foreignId('author_id')->constrained('users');
+                $table->foreignId('author_id')->constrained('users')->onDelete('cascade');;
                 $table->foreignId('coauthor_id')->nullable()->constrained('users');
                 $table->timestamps();
             });
